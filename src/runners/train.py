@@ -1,12 +1,13 @@
-from pathlib import Path
 import time
+from pathlib import Path
 
+import imageio.v3 as iio
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.utils.data as data
-import imageio.v3 as iio
+from tqdm import tqdm
 
 import src.graphics.camera as cam
 import src.network.network as net
@@ -145,12 +146,6 @@ def _train_one_epoch(
             fine_color,
         )
         loss = coarse_fine_loss_lambda * coarse_loss + fine_loss
-
-        iter_msg = f"[{i+1} / {len(train_dataset)}] "
-        epoch_msg = f"[{epoch} / {max_iter // len(train_dataset)}] "
-        msg = "Training loss " + iter_msg + epoch_msg + f": {loss.item():.6f}"
-        print("\x1b[2K\r" + msg, end="")
-
         avg_loss = avg_loss + loss.item()
 
         loss.backward()
@@ -221,11 +216,6 @@ def _validate_one_epoch(
                 img.view(-1, 3),
                 rendered_img.view(-1, 3),
             )
-
-            iter_msg = f"[{i+1} / {10}] "
-            msg = "Validation loss " + iter_msg + f": {loss.item():.6f}"
-            print("\x1b[2K\r" + msg, end="")
-
             avg_loss = avg_loss + loss.item()
 
             # save image
@@ -320,6 +310,12 @@ def train(
         model = dp_model
 
     # iteration
+    pbar = tqdm(
+        range(start_epoch, max_iter // len(train_dataset) + 1),
+        desc="Training",
+        unit="epoch",
+        dynamic_ncols=True,
+    )
     for epoch in range(start_epoch, max_iter // len(train_dataset) + 1):
         # train
         train_loss = _train_one_epoch(
@@ -372,3 +368,5 @@ def train(
 
         # save loss
         log.save_loss(log_path, epoch, train_loss, val_loss)
+        
+        pbar.update(1)

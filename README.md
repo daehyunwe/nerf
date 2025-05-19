@@ -18,10 +18,14 @@ This is a pytorch implementation of NeRF models in the following list.
 
 ## Demo with Blender Dataset
 1. Obtain blender dataset
-- Download a scene from [this link](https://drive.google.com/drive/folders/1JDdLGDruGNXWnM1eqY1FNL9PlStjaKWi).
+- Download nerf_synthetic.zip from [this link](https://drive.google.com/drive/folders/1cK3UDIJqKAAm7zyrxRYVFJ0BRMgrwhh4).
 - Place the zip file in **data/** and unzip it with
     ```
-    unzip data/{file_name}.zip -d data/
+    sudo unzip data/{file_name}.zip -d data/
+    ```
+- Change ownership if needed.
+    ```
+    sudo chown -R {username}:{username} data/nerf_synthetic
     ```
 2. Choose the *nerf_type* in **configs/nerf.yaml**, either *vanila* or *mip*.
 3. Start training with

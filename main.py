@@ -34,7 +34,7 @@ def main():
     # down sample images
     if not common_config["dataset"]["down_size"] is None:
         down.down_sample(
-            root_path / "data" / common_config["dataset"]["scene_name"],
+            root_path / "data" / common_config["dataset"]["type"] / common_config["dataset"]["scene_name"],
             common_config["dataset"]["down_size"],
         )
         scene_name = f"{common_config['dataset']['scene_name']}_down"
@@ -45,7 +45,7 @@ def main():
     if args.train:
         train.train(
             root_path / "log",  # path
-            root_path / "data",
+            root_path / "data" / common_config["dataset"]["type"],
             scene_name,
             common_config["trainer"]["device_ids"],  # trainer
             common_config["trainer"]["batch_size"],
@@ -72,7 +72,7 @@ def main():
     elif args.render:
         render.dynamic_render(
             root_path / "log",
-            root_path / "data",
+            root_path / "data" / common_config["dataset"]["type"],
             scene_name,
             common_config["trainer"]["device_ids"],
             nerf_config["renderer"]["num_coarse_samples"],

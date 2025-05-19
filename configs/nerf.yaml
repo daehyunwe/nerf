@@ -2,6 +2,7 @@ nerf_type: mip  # Select NeRF type.
 
 common:
   dataset:
+    type: nerf_synthetic  # Select dataset type.
     scene_name: lego  # Select scene type.
     down_size: [400, 400]  # Use null for no downsampling.
   
